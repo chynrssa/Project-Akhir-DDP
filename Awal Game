@@ -1,0 +1,157 @@
+#include <iostream>
+#include <ncurses/curses.h>
+#include <cstdlib>
+#include <ctime>
+#include <unistd.h>
+#include <windows.h>
+
+#define LEBAR_LAYAR 90
+#define TINGGI_LAYAR 27
+#define WIN_WIDTH 70
+#define MENU_WIDTH 20
+
+using namespace std;
+
+int kelinciY[5];
+int kelinciX[5];
+int kelinciFlag[3];
+int missCount = 0;
+int missLimit = 3;
+int TargetScore = 5;
+
+char MyKeranjang[2][14] ={ {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',}, 
+						   {'|', '', '', '', '', '', '', '', '', '', '', '_', '|'}};
+int keranjangPos = WIN_WIDTH / 2;
+int score = 0;
+
+void initNcurses(){
+	nodelay(stdscr, TRUE);
+    curs_set(0);
+    initscr();
+    start_color();
+    init_pair(1, COLOR_WHITE, COLOR_BLUE);
+    wbkgd(stdscr, COLOR_PAIR(1));
+    noecho();
+    cbreak();
+    keypad(stdscr, TRUE);
+    timeout(0);
+}
+void closeNcurses(){
+    endwin();
+}
+void Border(){
+    for (int i = 0; i < TINGGI_LAYAR; i++) {
+        for (int y = 0; y < 10; y++) {
+            mvprintw(i, 0 + y, "±");
+            mvprintw(i, LEBAR_LAYAR - y, "±");
+        }
+    }
+    for (int i = 0; i < 5; i++) {
+        mvprintw(i, LEBAR_LAYAR -5, "±");
+    }
+}
+void gotoxy(int x, int y){
+    move(y, x);
+}
+void arahKelinci(int ind){
+    kelinciX[ind] = 17 + rand() % (35);
+}
+void gambarKelinci(int ind){
+    if (kelinciFlag[ind] == true){
+        mvprintw(kelinciY[ind], kelinciX[ind], "  ^ _ ^ ");
+        mvprintw(kelinciY[ind] + 1, kelinciX[ind], "(  o.o  )");
+        mvprintw(kelinciY[ind] + 2, kelinciX[ind], " >  ^  < ");
+        mvprintw(kelinciY[ind] + 3, kelinciX[ind], " () () ");
+    }
+    else{
+        mvprintw(23, kelinciX[ind], "              ");
+        mvprintw(24, kelinciX[ind], "              ");
+        mvprintw(kelinciY[ind] + 2, kelinciX[ind], "              ");
+        mvprintw(kelinciY[ind] + 3, kelinciX[ind], "              ");
+    }
+}
+void hapusKelinci(int ind){
+    if (kelinciFlag[ind] == true)
+    {
+        mvprintw(kelinciY[ind], kelinciX[ind], "             ");
+        mvprintw(kelinciY[ind] + 1, kelinciX[ind], "             ");
+        mvprintw(kelinciY[ind] + 2, kelinciX[ind], "             ");
+        mvprintw(kelinciY[ind] + 3, kelinciX[ind], "             ");
+    }
+}
+void resetKelinci(int ind){
+    hapusKelinci(ind);
+    kelinciY[ind] = 1;
+    arahKelinci(ind);
+}
+void gambarKeranjang(){
+    for (int i = 0; i < 2; i++){
+        for (int j = 0; j < 14; j++){
+            char basketChar = MyKeranjang[i][j];
+            int posX = j + keranjangPos;
+            if (basketChar != ' ') {
+                if (i + 23 >= 0 && i + 23 < TINGGI_LAYAR && posX >= 0 && posX < LEBAR_LAYAR - 1) {
+                    mvprintw(i + 23, posX, "%c", basketChar);
+                }
+            }
+        }
+    }
+}
+void hapusKeranjang(){
+    for (int i = 0; i < 2; i++){
+        for (int j = 0; j < 14; j++){
+            mvprintw(i + 23, j + keranjangPos, " ");
+        }
+    }
+}
+
+void username(){
+    clear();
+    string ID;
+    const int MaxUsernameLength = 10;
+    do{
+    	clear();
+        mvprintw(5, 15, " SILAHKAN MASUKKAN USERNAME ANDA ! ");
+        mvprintw(9, 15, "...................................");
+        mvprintw(11, 15, "...................................");
+        mvprintw(10, 15, "username : ");
+        refresh();
+        echo();
+
+        int ch;
+        int pos = 0;
+
+        while ((ch = getch()) != '\n' && pos < MaxUsernameLength){
+            if (isprint(ch)){
+                ID.push_back(ch);
+                mvprintw(10, 25 + pos, "%c", ch);
+                refresh();
+                getch();
+                pos++;
+            }
+        }
+        noecho();
+        clear();
+
+        if (ID.empty()){
+            mvprintw(10, 15, " Please enter a username. ");
+            refresh();
+            getch();
+            clear();
+        }
+        else if (ID.length() > MaxUsernameLength){
+            mvprintw(10, 15, " Username anda terlalu panjang. ");
+            mvprintw(11, 15, " Maksimum Username adalah 10 Karakter.");
+            refresh();
+            getch();
+            clear();
+        }
+    } while (ID.empty() || ID.length() > MaxUsernameLength);
+    mvprintw(15, 10, "                                                      ");
+    mvprintw(19, 15, "==========================");
+    mvprintw(20, 15, " ID     : %s", ID.c_str());
+    mvprintw(21, 15, "==========================");
+    refresh();
+    getch();
+    clear();
+}
