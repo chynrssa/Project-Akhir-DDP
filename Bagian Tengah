@@ -1,117 +1,101 @@
-int menangkap(){
-    for (int ind = 0; ind < 2; ind++){
-        if (kelinciY[ind] + 4 >= 23 && kelinciY[ind] <= 27){
-            if (kelinciX[ind] >= keranjangPos && kelinciX[ind] <= keranjangPos + 9){
+int menangkap() {
+    for (int ind = 0; ind < 2; ind++) {
+        if (kelinciY[ind] + 4 >= 23 && kelinciY[ind] <= 27) {
+            if (kelinciX[ind] >= keranjangPos && kelinciX[ind] <= keranjangPos + 9) {
                 resetKelinci(ind);
                 return 1;
-            }else{
+            } else {
                 return 2;
             }
         }
     }
     return 0;
 }
-void gameover(){
-    int posY = 10;
-    for (int posX = 0; posX < 50; ++posX){
-        clear();
-        mvprintw(posY, posX,     "  GGG      A     M       M   EEEEE      OOO  V   V EEEEE RRRR \n ");
-        mvprintw(posY + 1, posX, " G        A A   MMM     MMM  E         O   O V   V E     R   R\n");
-        mvprintw(posY + 2, posX, " G  GGG  AAAAA  M   M  M  M  EEEEE     O   O V   V EEEEE RRRR\n");
-        mvprintw(posY + 3, posX, " G   GG  A   A  M    M    M  E         O   O V   V E     R  RR \n");
-        mvprintw(posY + 4, posX, "  GGG    A   A  M         M  EEEEE      OOO    V   EEEEE R   RR\n");
-        mvprintw(18, 30, "\t\t Score Anda Adalah\t: %d", score);
-        mvprintw(5, 15, "\t\t\t\t Press any key to go back to menu.");
-        refresh();
-        Sleep(100);
-        clear();
-    }
-    getch();
-    clear();
-}
-void scoregame(){
-    mvprintw( 16,100,"Skor Anda: %d", score);
-    refresh();
-}
-void YouWin(){
-    int posY = 0;
-    int screenWidth = 80; 
 
-    while (posY < 10)
-    {
-        clear();
-        mvprintw(posY, (screenWidth - 65) / 2,     "  yyy     yyy   oooooooooo   uuuu        uuuu      wwww                   wwww  iiiiii   nnnnn      nnnnn");
-        mvprintw(posY + 1, (screenWidth - 65) / 2, "  yyy     yyy  oooo    oooo  u  u        u  u      w  w                   w  w  ii  ii   n   n      n   n");
-        mvprintw(posY + 2, (screenWidth - 65) / 2, "  yyyy   yyyy  ooo      ooo  u  u        u  u      w  w                   w  w  ii  ii   n    n     n   n");
-        mvprintw(posY + 3, (screenWidth - 65) / 2, "   yyyyyyyy    ooo      ooo  u  u        u  u      w  w                   w  w  ii  ii   n     n    n   n");
-        mvprintw(posY + 4, (screenWidth - 65) / 2, "    yyyyyy     ooo      ooo  u  u        u  u      w  w      wwwwwww      w  w  ii  ii   n   n   n  n   n");
-        mvprintw(posY + 5, (screenWidth - 65) / 2, "     yyyyy     ooo      ooo  u  u        u  u      w  w     w  ww  w      w  w  ii  ii   n   n    nnn   n");
-        mvprintw(posY + 6, (screenWidth - 65) / 2, "     yyyy      ooo      ooo  u  u        u  u      w  w    w  w  w  w     w  w  ii  ii   n   n n  nn    n");
-        mvprintw(posY + 7, (screenWidth - 65) / 2, "     yyyy      ooo      ooo  u  u        u  u      w  w   w  w    w  w    w  w  ii  ii   n   n  n       n");
-        mvprintw(posY + 8, (screenWidth - 65) / 2, "     yyyy      oooo    oooo  u   uuuuuuuuu  u      w  w  w  w      w   w  w  w  ii  ii   n   n    nnn   n");
-        mvprintw(posY + 9, (screenWidth - 65) / 2, "     yyyy       oooooooooo   uuuuuuuuuuuuuuuu      wwwwwwwwww       wwwwwwwwww  iiiiii   nnnnn      nnnnn");
-        refresh();
-        Sleep(200);
+void gameover() {
+    int posY = 10;
+    system("color DE");
+
+    for (int posX = 0; posX < 50; ++posX) {
+        gotoxy(posX, posY);	   cout << "  GGG      A     M       M   EEEEE      OOO  V   V EEEEE RRRR \n ";
+        gotoxy(posX, posY + 1);cout << " G        A A   MMM     MMM  E         O   O V   V E     R   R\n";
+        gotoxy(posX, posY + 2);cout << " G  GGG  AAAAA  M   M  M  M  EEEEE     O   O V   V EEEEE RRRR \n";
+        gotoxy(posX, posY + 3);cout << " G   GG  A   A  M    M    M  E         O   O V   V E     R  RR \n";
+        gotoxy(posX, posY + 4);cout << "  GGG    A   A  M         M  EEEEE      OOO    V   EEEEE R   RR\n";
+        Sleep(50);
+        system("cls");
+
+        gotoxy(30, 18);cout << "\t\t Score Anda Adalah\t: " << score;
+        gotoxy(15, 5);cout << "\t\t\t\t Press any key to go back to menu.";
+    }
+}
+
+void scoregame() {
+    gotoxy(LEBAR_LAYAR + 7, 8);
+    cout << "Awal Score anda : " << score;
+}
+
+void YouWin() {
+    int posY = 0;
+    int screenWidth = 80;  
+    while (posY < 10) {
+        
+        system("cls");
+
+        gotoxy((screenWidth - 65) / 2, posY); 	  cout << "  yyy     yyy   oooooooooo   uuuu        uuuu      wwww                   wwww  iiiiii   nnnnn      nnnnn";
+        gotoxy((screenWidth - 65) / 2, posY + 1); cout << "  yyy     yyy  oooo    oooo  u  u        u  u      w  w                   w  w  ii  ii   n   n      n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 2); cout << "  yyyy   yyyy  ooo      ooo  u  u        u  u      w  w                   w  w  ii  ii   n    n     n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 3); cout << "   yyyyyyyy    ooo      ooo  u  u        u  u      w  w                   w  w  ii  ii   n     n    n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 4); cout << "    yyyyyy     ooo      ooo  u  u        u  u      w  w      wwwwwww      w  w  ii  ii   n      n   n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 5); cout << "     yyyyy     ooo      ooo  u  u        u  u      w  w     w  ww  w      w  w  ii  ii   n   n   n  n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 6); cout << "     yyyy      ooo      ooo  u  u        u  u      w  w    w  w  w  w     w  w  ii  ii   n   n n  nn    n";
+        gotoxy((screenWidth - 65) / 2, posY + 7); cout << "     yyyy      ooo      ooo  u  u        u  u      w  w   w  w    w  w    w  w  ii  ii   n   n  n       n";
+        gotoxy((screenWidth - 65) / 2, posY + 8); cout << "     yyyy      oooo    oooo  u   uuuuuuuuu  u      w  w  w  w      w   w  w  w  ii  ii   n   n    nnn   n";
+        gotoxy((screenWidth - 65) / 2, posY + 9); cout << "     yyyy       oooooooooo   uuuuuuuuuuuuuuuu      wwwwwwwwww       wwwwwwwwww  iiiiii   nnnnn      nnnnn";
+        Sleep(100);
         posY++;
     }
 }
-void loading(){
-    clear();
-    for (int i = 1; i <= 3; i++){
-        mvprintw(10, 35, "LOADING [>        ]");
-        refresh();
+
+void loading() {
+    system("cls");
+    system("color 90");
+
+    for (int i = 1; i <= 3; i++) {
+
+        gotoxy(35, 10);	cout << "LOADING [>        ]";
         Sleep(100);
-        clear();
-        mvprintw(10, 35, "LOADING [>>       ]");
-        refresh();
+        gotoxy(35, 10);	cout << "LOADING [>>       ]";
         Sleep(100);
-        clear();
-        mvprintw(10, 35, "LOADING [>>>      ]");
-        refresh();
+        gotoxy(35, 10);	cout << "LOADING [>>>      ]";
         Sleep(100);
-        clear();
-        mvprintw(10, 35, "LOADING [>>>>     ]");
-        refresh();
+        gotoxy(35, 10);	cout << "LOADING [>>>>     ]";
         Sleep(100);
-        clear();
-        mvprintw(10, 35, "LOADING [>>>>>    ]");
-        refresh();
+        gotoxy(35, 10);	cout << "LOADING [>>>>>    ]";
         Sleep(100);
-        clear();
-        mvprintw(10, 35, "LOADING [>>>>>>   ]");
-        refresh();
+        gotoxy(35, 10);	cout << "LOADING [>>>>>>   ]";
         Sleep(100);
-        clear();
-        mvprintw(10, 35, "LOADING [>>>>>>>  ]");
-        refresh();
+        gotoxy(35, 10);	cout << "LOADING [>>>>>>>  ]";
         Sleep(100);
-        clear();
-        mvprintw(10, 35, "LOADING [>>>>>>>> ]");
-        refresh();
+        gotoxy(35, 10);	cout << "LOADING [>>>>>>>> ]";
         Sleep(100);
-        clear();
-        mvprintw(10, 35, "LOADING [>>>>>>>>>]");
-        refresh();
+        gotoxy(35, 10);	cout << "LOADING [>>>>>>>>>]";
         Sleep(100);
-        clear();
     }
-    clear();
-    mvprintw(25, 30, "SELAMAT BERMAIN !!! ");
+    system("cls");
+    gotoxy(30, 25);	cout << "SELAMAT BERMAIN !!! ";
 }
+
 void instructions() {
-    clear();
-    mvprintw(1, 8, "\t\t Instructions ");
-    mvprintw(2, 8, "\n\t ------------------------------------");
-    mvprintw(4, 9, "\n\t Catch a rabbit that glides quickly ");
-    mvprintw(6, 8, "\n\t ------------------------------------");
-    mvprintw(8, 8, "\n\t Press 'n' to move left");
-    mvprintw(10, 8, "\n\t Press 'x' to move right");
-    mvprintw(12, 8, "\n\t Press 'escape' to exit");
-    mvprintw(14, 8, "\n\t ------------------------------------");
-    mvprintw(18, 8, "\n\n Press any key to go back to menu");
-    refresh();
-    nodelay(stdscr, FALSE);
+    system("color e5");
+    system("cls");
+    cout << " Instructions " << endl;
+    cout << "\n\t -----------------------------------";
+    cout << "\n\t catch a rabbit that glides quickly ";
+    cout << "\n\n\t Press 'n' to move left";
+    cout << "\n\t Press 'x' to move right";
+    cout << "\n\t Press 'escape' to exit";
+    cout << "\n\n\t Press any key to go back to menu";
     getch();
-    clear();
-    refresh();
+    system("cls");
 }
