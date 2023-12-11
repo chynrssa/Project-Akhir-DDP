@@ -1,9 +1,7 @@
-#include <iostream>
-#include <ncurses/curses.h>
-#include <cstdlib>
-#include <ctime>
-#include <unistd.h>
-#include <windows.h>
+#include<iostream>
+#include<conio.h>
+#include<windows.h>
+#include<time.h>
 
 #define LEBAR_LAYAR 90
 #define TINGGI_LAYAR 27
@@ -12,146 +10,128 @@
 
 using namespace std;
 
+HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+COORD CursorPosition;
+
 int kelinciY[5];
 int kelinciX[5];
 int kelinciFlag[3];
-int missCount = 0;
-int missLimit = 3;
-int TargetScore = 5;
+int missCount = 5;
+int missLimit = 3;  
+int TargetScore = 30;
 
-char MyKeranjang[2][14] ={ {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',}, 
-						   {'|', '', '', '', '', '', '', '', '', '', '', '_', '|'}};
+char MyKeranjang[2][14] = {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                           '|', '', '', '', '', '', '', '', '', '', '', '', '', '|'
+};
+
 int keranjangPos = WIN_WIDTH / 2;
 int score = 0;
 
-void initNcurses(){
-	nodelay(stdscr, TRUE);
-    curs_set(0);
-    initscr();
-    start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLUE);
-    wbkgd(stdscr, COLOR_PAIR(1));
-    noecho();
-    cbreak();
-    keypad(stdscr, TRUE);
-    timeout(0);
+void gotoxy(int x, int y) {
+    CursorPosition.X = x;
+    CursorPosition.Y = y;
+    SetConsoleCursorPosition(console, CursorPosition);
 }
-void closeNcurses(){
-    endwin();
+
+void setcursor(bool visible, DWORD size) {
+    if (size == 0)
+        size = 20;
+
+    CONSOLE_CURSOR_INFO lpCursor;
+    lpCursor.bVisible = visible;
+    lpCursor.dwSize = size;
+    SetConsoleCursorInfo(console, &lpCursor);
 }
-void Border(){
+
+void Border() {
     for (int i = 0; i < TINGGI_LAYAR; i++) {
         for (int y = 0; y < 10; y++) {
-            mvprintw(i, 0 + y, "±");
-            mvprintw(i, LEBAR_LAYAR - y, "±");
+            gotoxy(0 + y, i);
+            cout << "±";
+            gotoxy(LEBAR_LAYAR - y, i);
+            cout << "±";
         }
     }
-    for (int i = 0; i < 5; i++) {
-        mvprintw(i, LEBAR_LAYAR -5, "±");
+    for (int i = 0; i < TINGGI_LAYAR; i++) {
+        gotoxy(LEBAR_LAYAR, i);
+        cout << "±";
     }
 }
-void gotoxy(int x, int y){
-    move(y, x);
-}
-void arahKelinci(int ind){
+
+void arahKelinci(int ind) {
     kelinciX[ind] = 17 + rand() % (35);
 }
-void gambarKelinci(int ind){
-    if (kelinciFlag[ind] == true){
-        mvprintw(kelinciY[ind], kelinciX[ind], "  ^ _ ^ ");
-        mvprintw(kelinciY[ind] + 1, kelinciX[ind], "(  o.o  )");
-        mvprintw(kelinciY[ind] + 2, kelinciX[ind], " >  ^  < ");
-        mvprintw(kelinciY[ind] + 3, kelinciX[ind], " () () ");
-    }
-    else{
-        mvprintw(23, kelinciX[ind], "              ");
-        mvprintw(24, kelinciX[ind], "              ");
-        mvprintw(kelinciY[ind] + 2, kelinciX[ind], "              ");
-        mvprintw(kelinciY[ind] + 3, kelinciX[ind], "              ");
-    }
-}
-void hapusKelinci(int ind){
-    if (kelinciFlag[ind] == true)
-    {
-        mvprintw(kelinciY[ind], kelinciX[ind], "             ");
-        mvprintw(kelinciY[ind] + 1, kelinciX[ind], "             ");
-        mvprintw(kelinciY[ind] + 2, kelinciX[ind], "             ");
-        mvprintw(kelinciY[ind] + 3, kelinciX[ind], "             ");
+
+void gambarKelinci(int ind) {
+    if (kelinciFlag[ind] == true) {
+        gotoxy(kelinciX[ind], kelinciY[ind]);	  cout << "  ^ _ ^ ";
+        gotoxy(kelinciX[ind], kelinciY[ind] + 1); cout << "(  o.o  )";
+        gotoxy(kelinciX[ind], kelinciY[ind] + 2); cout << " >  ^  < ";
+        gotoxy(kelinciX[ind], kelinciY[ind] + 3); cout << " () () ";
+    } else {
+        gotoxy(kelinciX[ind], 23);				  cout << "              ";
+        gotoxy(kelinciX[ind], 24);				  cout << "              ";
+        gotoxy(kelinciX[ind], kelinciY[ind] + 2); cout << "              ";
+        gotoxy(kelinciX[ind], kelinciY[ind] + 3); cout << "              ";
     }
 }
-void resetKelinci(int ind){
+
+void hapusKelinci(int ind) {
+    if (kelinciFlag[ind] == true) {
+        gotoxy(kelinciX[ind], kelinciY[ind]); 	 cout << "             ";
+        gotoxy(kelinciX[ind], kelinciY[ind] + 1);cout << "             ";
+        gotoxy(kelinciX[ind], kelinciY[ind] + 2);cout << "             ";
+        gotoxy(kelinciX[ind], kelinciY[ind] + 3);cout << "             ";
+    }
+}
+
+void resetKelinci(int ind) {
     hapusKelinci(ind);
     kelinciY[ind] = 1;
     arahKelinci(ind);
 }
-void gambarKeranjang(){
-    for (int i = 0; i < 2; i++){
-        for (int j = 0; j < 14; j++){
-            char basketChar = MyKeranjang[i][j];
-            int posX = j + keranjangPos;
-            if (basketChar != ' ') {
-                if (i + 23 >= 0 && i + 23 < TINGGI_LAYAR && posX >= 0 && posX < LEBAR_LAYAR - 1) {
-                    mvprintw(i + 23, posX, "%c", basketChar);
-                }
-            }
-        }
-    }
-}
-void hapusKeranjang(){
-    for (int i = 0; i < 2; i++){
-        for (int j = 0; j < 14; j++){
-            mvprintw(i + 23, j + keranjangPos, " ");
+
+void gambarKeranjang() {
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 14; j++) {
+            gotoxy(j + keranjangPos, i + 23);
+            cout << MyKeranjang[i][j];
         }
     }
 }
 
-void username(){
-    clear();
+void hapusKeranjang() {
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 14; j++) {
+            gotoxy(j + keranjangPos, i + 23); cout << " ";
+        }
+    }
+}
+
+
+void username() {
+    system("cls");
     string ID;
     const int MaxUsernameLength = 10;
-    do{
-    	clear();
-        mvprintw(5, 15, " SILAHKAN MASUKKAN USERNAME ANDA ! ");
-        mvprintw(9, 15, "...................................");
-        mvprintw(11, 15, "...................................");
-        mvprintw(10, 15, "username : ");
-        refresh();
-        echo();
-
-        int ch;
-        int pos = 0;
-
-        while ((ch = getch()) != '\n' && pos < MaxUsernameLength){
-            if (isprint(ch)){
-                ID.push_back(ch);
-                mvprintw(10, 25 + pos, "%c", ch);
-                refresh();
-                getch();
-                pos++;
-            }
-        }
-        noecho();
-        clear();
-
-        if (ID.empty()){
-            mvprintw(10, 15, " Please enter a username. ");
-            refresh();
+    do {
+        gotoxy(15, 5);	cout << " SILAHKAN MASUKKAN USERNAME ANDA ! ";
+        gotoxy(15, 9);	cout << "...................................";
+        gotoxy(15, 11);	cout << "...................................";
+        gotoxy(15, 10);	cout << "username : ";
+        getline(cin, ID);
+        system("cls");
+        if (ID.length() > MaxUsernameLength) {
+            cout << "\n Username anda terlalu panjang. \n Maksimum Username adalah " << MaxUsernameLength << " Karakter. "<< endl;
             getch();
-            clear();
+            system("cls");
         }
-        else if (ID.length() > MaxUsernameLength){
-            mvprintw(10, 15, " Username anda terlalu panjang. ");
-            mvprintw(11, 15, " Maksimum Username adalah 10 Karakter.");
-            refresh();
-            getch();
-            clear();
-        }
-    } while (ID.empty() || ID.length() > MaxUsernameLength);
-    mvprintw(15, 10, "                                                      ");
-    mvprintw(19, 15, "==========================");
-    mvprintw(20, 15, " ID     : %s", ID.c_str());
-    mvprintw(21, 15, "==========================");
-    refresh();
-    getch();
-    clear();
+    } while (ID.length() > MaxUsernameLength);
+    system("cls");
+    gotoxy(15, 5);	cout << "                                                      ";
+    gotoxy(15, 9);	cout << "                                                      ";
+    gotoxy(15, 11);	cout << "                                                     ";
+    gotoxy(15, 10);	cout << "                                                     ";
+    gotoxy(LEBAR_LAYAR + 2, 18); cout << "==========================";
+    gotoxy(LEBAR_LAYAR + 2, 19); cout << " ID     : " << ID;
+    gotoxy(LEBAR_LAYAR + 2, 20); cout << "==========================";
 }
