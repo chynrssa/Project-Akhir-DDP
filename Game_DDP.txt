@@ -135,3 +135,96 @@ void username() {
     gotoxy(LEBAR_LAYAR + 2, 19); cout << " ID     : " << ID;
     gotoxy(LEBAR_LAYAR + 2, 20); cout << "==========================";
 }
+int menangkap() {
+    for (int ind = 0; ind < 2; ind++) {
+        if (kelinciY[ind] + 4 >= 23 && kelinciY[ind] <= 27) {
+            if (kelinciX[ind] >= keranjangPos && kelinciX[ind] <= keranjangPos + 9) {
+                resetKelinci(ind);
+                return 1;
+            } else {
+                return 2;
+            }
+        }
+    }
+    return 0;
+}
+void gameover() {
+    int posY = 10;
+    system("color DE");
+    for (int posX = 0; posX < 50; ++posX) {
+        gotoxy(posX, posY);	   cout << "  GGG      A     M       M   EEEEE      OOO  V   V EEEEE RRRR \n ";
+        gotoxy(posX, posY + 1);cout << " G        A A   MMM     MMM  E         O   O V   V E     R   R\n";
+        gotoxy(posX, posY + 2);cout << " G  GGG  AAAAA  M   M  M  M  EEEEE     O   O V   V EEEEE RRRR \n";
+        gotoxy(posX, posY + 3);cout << " G   GG  A   A  M    M    M  E         O   O V   V E     R  RR \n";
+        gotoxy(posX, posY + 4);cout << "  GGG    A   A  M         M  EEEEE      OOO    V   EEEEE R   RR\n";
+        Sleep(50);
+        system("cls");
+
+        gotoxy(30, 18);cout << "\t\t Score Anda Adalah\t: " << score;
+        gotoxy(15, 5);cout << "\t\t\t\t Press any key to go back to menu.";
+    }
+}
+void scoregame() {
+    gotoxy(LEBAR_LAYAR + 7, 8);
+    cout << "Awal Score anda : " << score;
+}
+void YouWin() {
+    int posY = 0;
+    int screenWidth = 80;  
+    while (posY < 10) {
+        system("cls");
+
+        gotoxy((screenWidth - 65) / 2, posY); 	  cout << "  yyy     yyy   oooooooooo   uuuu        uuuu      wwww                   wwww  iiiiii   nnnnn      nnnnn";
+        gotoxy((screenWidth - 65) / 2, posY + 1); cout << "  yyy     yyy  oooo    oooo  u  u        u  u      w  w                   w  w  ii  ii   n   n      n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 2); cout << "  yyyy   yyyy  ooo      ooo  u  u        u  u      w  w                   w  w  ii  ii   n    n     n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 3); cout << "   yyyyyyyy    ooo      ooo  u  u        u  u      w  w                   w  w  ii  ii   n     n    n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 4); cout << "    yyyyyy     ooo      ooo  u  u        u  u      w  w      wwwwwww      w  w  ii  ii   n      n   n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 5); cout << "     yyyyy     ooo      ooo  u  u        u  u      w  w     w  ww  w      w  w  ii  ii   n   n   n  n   n";
+        gotoxy((screenWidth - 65) / 2, posY + 6); cout << "     yyyy      ooo      ooo  u  u        u  u      w  w    w  w  w  w     w  w  ii  ii   n   n n  nn    n";
+        gotoxy((screenWidth - 65) / 2, posY + 7); cout << "     yyyy      ooo      ooo  u  u        u  u      w  w   w  w    w  w    w  w  ii  ii   n   n  n       n";
+        gotoxy((screenWidth - 65) / 2, posY + 8); cout << "     yyyy      oooo    oooo  u   uuuuuuuuu  u      w  w  w  w      w   w  w  w  ii  ii   n   n    nnn   n";
+        gotoxy((screenWidth - 65) / 2, posY + 9); cout << "     yyyy       oooooooooo   uuuuuuuuuuuuuuuu      wwwwwwwwww       wwwwwwwwww  iiiiii   nnnnn      nnnnn";
+        Sleep(100);
+        posY++;
+    }
+}
+void loading() {
+    system("cls");
+    system("color 90");
+    for (int i = 1; i <= 3; i++) {
+
+        gotoxy(35, 10);	cout << "LOADING [>        ]";
+        Sleep(100);
+        gotoxy(35, 10);	cout << "LOADING [>>       ]";
+        Sleep(100);
+        gotoxy(35, 10);	cout << "LOADING [>>>      ]";
+        Sleep(100);
+        gotoxy(35, 10);	cout << "LOADING [>>>>     ]";
+        Sleep(100);
+        gotoxy(35, 10);	cout << "LOADING [>>>>>    ]";
+        Sleep(100);
+        gotoxy(35, 10);	cout << "LOADING [>>>>>>   ]";
+        Sleep(100);
+        gotoxy(35, 10);	cout << "LOADING [>>>>>>>  ]";
+        Sleep(100);
+        gotoxy(35, 10);	cout << "LOADING [>>>>>>>> ]";
+        Sleep(100);
+        gotoxy(35, 10);	cout << "LOADING [>>>>>>>>>]";
+        Sleep(100);
+    }
+    system("cls");
+    gotoxy(30, 25);	cout << "SELAMAT BERMAIN !!! ";
+}
+void instructions() {
+    system("color e5");
+    system("cls");
+    cout << " Instructions " << endl;
+    cout << "\n\t -----------------------------------";
+    cout << "\n\t catch a rabbit that glides quickly ";
+    cout << "\n\n\t Press 'n' to move left";
+    cout << "\n\t Press 'x' to move right";
+    cout << "\n\t Press 'escape' to exit";
+    cout << "\n\n\t Press any key to go back to menu";
+    getch();
+    system("cls");
+}
